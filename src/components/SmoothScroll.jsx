@@ -120,28 +120,44 @@ const SmoothScroll = () => {
     // --- Touch support for mobile ---
     let touchStartY = null;
     let touchEndY = null;
+    let isTouching = false;
 
     const onTouchStart = (e) => {
       if (isAnimating.current) return; // Prevent new touches during animation
       if (e.touches.length === 1) {
         touchStartY = e.touches[0].clientY;
+        isTouching = true;
+      }
+    };
+
+    const onTouchMove = (e) => {
+      if (isTouching) {
+        e.preventDefault(); // Prevent native scroll during swipe
       }
     };
 
     const onTouchEnd = (e) => {
       if (isAnimating.current) return; // Prevent new touches during animation
-      if (touchStartY === null) return;
+      if (touchStartY === null) {
+        isTouching = false;
+        return;
+      }
       touchEndY = e.changedTouches[0].clientY;
       const deltaY = touchStartY - touchEndY;
-      if (Math.abs(deltaY) < 40) return; // Minimum swipe distance
+      if (Math.abs(deltaY) < 40) {
+        isTouching = false;
+        return;
+      }
       const fakeWheelEvent = { deltaY: deltaY, preventDefault: () => {} };
       onWheel(fakeWheelEvent);
       touchStartY = null;
       touchEndY = null;
+      isTouching = false;
     };
 
     window.addEventListener("wheel", onWheel, { passive: false });
     window.addEventListener("touchstart", onTouchStart, { passive: false });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
     window.addEventListener("touchend", onTouchEnd, { passive: false });
 
     // Prevent keyboard scroll during animation
@@ -162,6 +178,7 @@ const SmoothScroll = () => {
     return () => {
       window.removeEventListener("wheel", onWheel);
       window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("touchend", onTouchEnd);
       window.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
