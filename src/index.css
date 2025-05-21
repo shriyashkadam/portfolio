@@ -18,6 +18,11 @@ body {
   scrollbar-width: none; /* Firefox */
   overflow-y: scroll;    /* Always show scroll area, but hide bar */
 }
+html, body {
+  width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
@@ -826,6 +831,12 @@ opacity: 0;
   flex: 1 0 33%;
   margin-top: 2.5rem;
 }
+.email-mobile {
+  display: none;
+}
+.email-desktop {
+  display: inline;
+}
 
 .view11-contact-heading {
   font-size: 1.1rem;
@@ -1180,4 +1191,264 @@ opacity: 0;
   filter: brightness(1.25) drop-shadow(0 0 8px #fff);
   transform: scale(1.18);
 }
+
+@media (max-width: 700px) {
+  .navbar {
+    padding: 6px 10px;
+    gap: 8px;
+  }
+  .nav-btn, .socials-icon {
+    width: 32px;
+    height: 32px;
+  }
+  .nav-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .scroll-down {
+    font-size: 0.7rem;    /* Smaller text */
+    bottom: 12px;         /* Slightly higher if needed */
+  }
+  .scroll-down .arrow {
+    width: 14px;          /* Smaller arrow */
+    height: 14px;
+    border-bottom: 1.5px solid #aaa;
+    border-right: 1.5px solid #aaa;
+    margin-bottom: 4px;
+  }
+  .persistent-glow-bg {
+    width: 220px;
+    height: 120px;
+    filter: blur(18px);
+    top: 55%;
+  }
+  .view1-main-text {
+    font-size: 2rem;
+    margin-top: 90px;
+    padding: 0 8vw;
+    word-break: break-word;
+    white-space: normal;   /* <-- Add this line */
+  }
+
+  .view5-main-text {
+    font-size: 2rem;
+    margin-top: 60px;
+    padding: 0 6vw;
+    text-align: center;
+    word-break: break-word;
+    white-space: normal;
+    top: 70%;
+
+  }
+  .view5-main-text-1,
+  .view5-main-text-2 {
+    position: static;
+    left: auto;
+    transform: none;
+    width: 100%;
+    margin: 0.5rem 0;
+    text-align: center;
+  }
+   .view8-section-content {
+    padding-top: 1.5rem;
+  }
+  .view8-heading {
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+    padding: 0 4vw;
+  }
+  .view8-tiles {
+    gap: 1.2rem;
+    max-width: 98vw;
+    width: 98vw;
+    padding: 0 1vw;
+  }
+  .view8-tile {
+    flex-direction: column;
+    align-items: center;
+    min-height: 100px;
+    padding: 1.2rem 0.7rem;
+  }
+  .view8-logo-placeholder {
+    width: 80px;
+    height: 80px;
+    margin: 0 0 1rem 0;
+  }
+  .view8-logo-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .view8-tile-content h2 {
+    font-size: 0.85rem;
+    text-align: center;
+  }
+  .view8-tile-content p,
+  .view8-tile-content ul {
+    font-size: 0.65rem;
+    text-align: center;
+    word-break: break-word;
+  }
+  .view8-tile-content ul {
+    margin-left: 0;
+    padding-left: 1.2rem;
+  }
+    .view9-section-content {
+    padding-top: 1.2rem;
+  }
+  .view9-heading {
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+    padding: 0 4vw;
+  }
+  .view9-tiles {
+    flex-direction: column;
+    gap: 1.2rem;
+    max-width: 98vw;
+    width: 98vw;
+    padding: 0 1vw;
+    align-items: center;
+  }
+  .view9-tile {
+    min-width: unset;
+    max-width: 98vw;
+    width: 100%;
+    height: auto;
+    padding: 0.7rem 0.7rem 1.2rem 0.7rem;
+  }
+  .view9-img-wrapper {
+       width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    height: 90px;           /* Reduced from 140px to 90px */
+    margin-bottom: 0.7rem;
+    border-radius: 14px 14px 0 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    padding: 0;
+  }
+  .view9-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
+    display: block;
+    box-shadow: 0 4px 18px 0 rgba(31,38,135,0.18), 0 1.5px 8px 0 rgba(0,0,0,0.10);
+  }
+  .view9-tile-content h2 {
+    font-size: 0.85rem;
+    text-align: center;
+  }
+  .view9-tile-content p,
+  .view9-tile-content ul {
+    font-size: 0.65rem;
+    text-align: center;
+    word-break: break-word;
+  }
+  .view9-tile-content ul {
+    margin-left: 0;
+    padding-left: 1.2rem;
+  }
+
+    .view10-section-content {
+    padding-top: 1.2rem;
+    min-height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+  }
+   .view10-heading {
+    font-size: 1rem;
+    margin-bottom: 3rem; /* Increased for more space below heading */
+    padding: 0 4vw;
+    text-align: center;
+    word-break: break-word;
+  }
+  .skills-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    grid-template-rows: repeat(5, 1fr);    /* 5 rows */
+    gap: 1.2rem;
+    max-width: 90vw;
+    width: 90vw;
+    padding-bottom: 1rem;
+    justify-items: center;
+  }
+  .skill-tile {
+    width: 100px;
+    height: 100px;
+    padding: 0.4rem 0.1rem 0.1rem 0.1rem;
+    font-size: 0.7rem;
+    margin-bottom: 0.6rem;
+  }
+  .skill-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.4rem;
+  }
+  .skill-label {
+    font-size: 0.6rem;
+  }
+  .view11-section-content {
+    padding-top: 1.2rem;
+    min-height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+  }
+  .view11-top {
+    flex-direction: column;
+    gap: 1.2rem;
+    align-items: center;
+  }
+  .view11-about-row {
+    flex-direction: column;
+    gap: 1.2rem;
+    align-items: center;
+  }
+  .view11-workout-tile {
+    display: none; /* Hide workout split on phones */
+  }
+   .view11-portrait-tile {
+    min-width: 120px;
+    max-width: 180px;
+    min-height: 120px;
+    max-height: 180px;
+    padding: 0.2rem;
+  }
+  .view11-heading {
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+    padding: 0 4vw;
+    text-align: center;
+    word-break: break-word;
+  }
+  .email-mobile {
+    display: inline;
+  }
+  .email-desktop {
+    display: none;
+  }
+  .view11-contact-heading {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+  .view11-contact-tiles {
+    flex-direction: row;   /* Keep them side by side */
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;       /* Allows wrapping if there are many tiles */
+  }
+  .view11-contact-tile {
+    min-width: 90px;
+    font-size: 0.6rem;
+    padding: 0.7rem 1rem;
+  }
+  .view11-footer {
+    font-size: 0.55rem;
+    right: 0.5rem;
+    bottom: 0.5rem;
+  }
+}
+
 

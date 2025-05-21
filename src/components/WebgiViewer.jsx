@@ -99,8 +99,8 @@ const WebgiViewer = forwardRef((props, ref) => {
     });
 
     if (isMobileOrTablet) {
-      position.set(-16.7, 1.17, 11.7);
-      target.set(0, 1.37, 0);
+      position.set(11.12, 0.63, 0.36);
+      target.set(0, 0, 0);
       props.contentRef.current.className = "mobile-or-tablet";
     }
 

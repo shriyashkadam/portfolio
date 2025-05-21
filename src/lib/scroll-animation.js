@@ -11,7 +11,7 @@ export const scrollAnimation = (position, target, isMobile, onUpdate) => {
 
   // View1 to View2
   gsap.to(position, {
-    ...pos(!isMobile ? 7.12 : -7.0, !isMobile ? 0.40 : -12.2, !isMobile ? 0.23 : -6.0),
+    ...pos(!isMobile ? 7.12 : 11.12, !isMobile ? 0.40 :  0.6, !isMobile ? 0.23 :  0.36),
     scrollTrigger: {
       trigger: ".view2-section",
       start: "top 80%",
@@ -23,7 +23,7 @@ export const scrollAnimation = (position, target, isMobile, onUpdate) => {
     onUpdate,
   });
   gsap.to(target, {
-    ...pos(!isMobile ? 0.00 : 0.7, !isMobile ? 0.00 : 1.9, !isMobile ? 0.00 : 0.7),
+    ...pos(!isMobile ? 0.00 : 0.00 , !isMobile ? 0.00 : 0.00 , !isMobile ? 0.00 : 0.00 ),
     scrollTrigger: {
       trigger: ".view2-section",
       start: "top 80%",
@@ -36,7 +36,7 @@ export const scrollAnimation = (position, target, isMobile, onUpdate) => {
 
   // View2 to View3
   gsap.to(position, {
-    ...pos(!isMobile ? 0.22 : -9, !isMobile ? 0.05 : -14, !isMobile ? -7.13 : -8),
+    ...pos(!isMobile ? 0.22 : 0.48, !isMobile ? 0.05 : 0.11, !isMobile ? -7.13 : -14.98),
     scrollTrigger: {
       trigger: ".view3-section",
       start: "top 80%",
@@ -48,7 +48,7 @@ export const scrollAnimation = (position, target, isMobile, onUpdate) => {
     onUpdate,
   });
   gsap.to(target, {
-    ...pos(!isMobile ? 0.00 : 1, !isMobile ? 0.00 : 2, !isMobile ? 0.00 : 1),
+    ...pos(!isMobile ? 0.00 : 0.00 , !isMobile ? 0.00 : 0.00 , !isMobile ? 0.00 : 0.00 ),
     scrollTrigger: {
       trigger: ".view3-section",
       start: "top 80%",
@@ -61,7 +61,7 @@ export const scrollAnimation = (position, target, isMobile, onUpdate) => {
 
   // View3 to View4
   gsap.to(position, {
-    ...pos(!isMobile ? -8.11 : -11, !isMobile ? 3.9 : -16, !isMobile ? -0.12 : -10),
+    ...pos(!isMobile ? -8.11 : -12.68, !isMobile ? 3.9 : 6.10, !isMobile ? -0.12 : -0.20),
     scrollTrigger: {
       trigger: ".view4-section",
       start: "top 80%",
@@ -73,7 +73,7 @@ export const scrollAnimation = (position, target, isMobile, onUpdate) => {
     onUpdate,
   });
   gsap.to(target, {
-    ...pos(!isMobile ? 0.00 : 1.5, !isMobile ? 0.00 : 2.2, !isMobile ? 0.00 : 2),
+    ...pos(!isMobile ? 0.00 : 0.00, !isMobile ? 0.00 : 0.00, !isMobile ? 0.00 : 0.00),
     scrollTrigger: {
       trigger: ".view4-section",
       start: "top 80%",
@@ -86,7 +86,7 @@ export const scrollAnimation = (position, target, isMobile, onUpdate) => {
 
   // View4 to View5
   gsap.to(position, {
-    ...pos(!isMobile ? -2.70 : -13, !isMobile ? 8.58 : -18, !isMobile ? 0.00 : -12),
+    ...pos(!isMobile ? -2.70 : -4.24, !isMobile ? 8.58 : 13.42, !isMobile ? 0.00 : 0.00),
     scrollTrigger: {
       trigger: ".view5-section",
       start: "top 80%",
@@ -98,7 +98,7 @@ export const scrollAnimation = (position, target, isMobile, onUpdate) => {
     onUpdate,
   });
   gsap.to(target, {
-    ...pos(!isMobile ? 0.00 : 2, !isMobile ? 0.00 : 2.5, !isMobile ? 0.00 : 3),
+    ...pos(!isMobile ? 0.00 : 0.00, !isMobile ? 0.00 : 0.00, !isMobile ? 0.00 : 0.00),
     scrollTrigger: {
       trigger: ".view5-section",
       start: "top 80%",
@@ -111,7 +111,7 @@ export const scrollAnimation = (position, target, isMobile, onUpdate) => {
 
   // View5 to View6
   gsap.to(position, {
-    ...pos(!isMobile ? -2.11 : -15, !isMobile ? 1.52 : -20, !isMobile ? 0.53 : -14),
+    ...pos(!isMobile ? -2.11 : -1.61, !isMobile ? 1.52 : 0.06, !isMobile ? 0.53 : 0.52),
     scrollTrigger: {
       trigger: ".view6-section",
       start: "top 80%",
@@ -123,7 +123,7 @@ export const scrollAnimation = (position, target, isMobile, onUpdate) => {
     onUpdate,
   });
   gsap.to(target, {
-    ...pos(!isMobile ? 0.00 : 2.5, !isMobile ? 0.00 : 2.7, !isMobile ? 0.00 : 4),
+    ...pos(!isMobile ? 0.00 : 1.23, !isMobile ? 0.00 : -0.10, !isMobile ? 0.00 : -0.4),
     scrollTrigger: {
       trigger: ".view6-section",
       start: "top 80%",
@@ -136,7 +136,7 @@ export const scrollAnimation = (position, target, isMobile, onUpdate) => {
 
   // View6 to View7
   gsap.to(position, {
-    ...pos(!isMobile ? 0.90 : -17, !isMobile ? -0.08 : -22, !isMobile ? -0.29 : -16),
+    ...pos(!isMobile ? 0.90 : 0.90, !isMobile ? -0.08 : -0.08, !isMobile ? -0.29 : -0.29),
     scrollTrigger: {
       trigger: ".view7-section",
       start: "top 80%",
@@ -148,7 +148,7 @@ export const scrollAnimation = (position, target, isMobile, onUpdate) => {
     onUpdate,
   });
   gsap.to(target, {
-    ...pos(!isMobile ? 1.23 : 3, !isMobile ? -0.10 : 3, !isMobile ? -0.4 : 5),
+    ...pos(!isMobile ? 1.23 : 1.23 , !isMobile ? -0.10 : 0.10 , !isMobile ? -0.4 : -0.4),
     scrollTrigger: {
       trigger: ".view7-section",
       start: "top 80%",

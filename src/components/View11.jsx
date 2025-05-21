@@ -23,6 +23,9 @@ function View11() {
         <div className="view11-top">
           <h1 className="view11-heading">More About Me</h1>
           <div className="view11-about-row">
+            <div className="view11-portrait-tile">
+              <img src={portraitImg} alt="Portrait" />
+            </div>
             <div className="view11-about-tile">
               <div className="view11-about-title">About Me</div>
               <div className="view11-about-desc">
@@ -44,9 +47,6 @@ function View11() {
                 ))}
               </ul>
             </div>
-            <div className="view11-portrait-tile">
-              <img src={portraitImg} alt="Portrait" />
-            </div>
           </div>
         </div>
         <div className="view11-bottom">
@@ -64,6 +64,17 @@ function View11() {
             </a>
             <a
               className="view11-contact-tile"
+              href={`mailto:${email}`}
+              title="Email"
+            >
+              <FaRegEnvelope className="view11-contact-icon" />
+              <span className="email-label">
+                <span className="email-desktop">{email}</span>
+                <span className="email-mobile">Email</span>
+              </span>
+            </a>
+            <a
+              className="view11-contact-tile"
               href={linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -71,14 +82,6 @@ function View11() {
             >
               <FaLinkedin className="view11-contact-icon" />
               <span>LinkedIn</span>
-            </a>
-            <a
-              className="view11-contact-tile"
-              href={`mailto:${email}`}
-              title="Email"
-            >
-              <FaRegEnvelope className="view11-contact-icon" />
-              <span>{email}</span>
             </a>
           </div>
         </div>
