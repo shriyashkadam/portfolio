@@ -338,7 +338,7 @@ opacity: 0;
   z-index: -1; 
   width: 100vw;
   height: 100vh;
-  background: url("src/assets/bg5.jpg") center center / cover no-repeat;
+  background: url("/bg5.jpg") center center / cover no-repeat;
   opacity: 1;
   pointer-events: none;
   transition: opacity 0.8s cubic-bezier(.4,0,.2,1);
@@ -349,7 +349,7 @@ opacity: 0;
   z-index: -5; 
   width: 100vw;
   height: 100vh;
-  background: url("src/assets/images/bg.png") center center / cover no-repeat;
+  background: url("/bg.png") center center / cover no-repeat;
   pointer-events: none;
   transition: opacity 0.8s cubic-bezier(.4,0,.2,1);
 }
