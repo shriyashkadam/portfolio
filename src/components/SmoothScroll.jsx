@@ -122,12 +122,14 @@ const SmoothScroll = () => {
     let touchEndY = null;
 
     const onTouchStart = (e) => {
+      if (isAnimating.current) return; // Prevent new touches during animation
       if (e.touches.length === 1) {
         touchStartY = e.touches[0].clientY;
       }
     };
 
     const onTouchEnd = (e) => {
+      if (isAnimating.current) return; // Prevent new touches during animation
       if (touchStartY === null) return;
       touchEndY = e.changedTouches[0].clientY;
       const deltaY = touchStartY - touchEndY;
