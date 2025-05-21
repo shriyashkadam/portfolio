@@ -117,7 +117,30 @@ const SmoothScroll = () => {
       e.preventDefault();
     };
 
+    // --- Touch support for mobile ---
+    let touchStartY = null;
+    let touchEndY = null;
+
+    const onTouchStart = (e) => {
+      if (e.touches.length === 1) {
+        touchStartY = e.touches[0].clientY;
+      }
+    };
+
+    const onTouchEnd = (e) => {
+      if (touchStartY === null) return;
+      touchEndY = e.changedTouches[0].clientY;
+      const deltaY = touchStartY - touchEndY;
+      if (Math.abs(deltaY) < 40) return; // Minimum swipe distance
+      const fakeWheelEvent = { deltaY: deltaY, preventDefault: () => {} };
+      onWheel(fakeWheelEvent);
+      touchStartY = null;
+      touchEndY = null;
+    };
+
     window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("touchstart", onTouchStart, { passive: false });
+    window.addEventListener("touchend", onTouchEnd, { passive: false });
 
     // Prevent keyboard scroll during animation
     const onKeyDown = (e) => {
@@ -136,6 +159,8 @@ const SmoothScroll = () => {
 
     return () => {
       window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchend", onTouchEnd);
       window.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
     };
