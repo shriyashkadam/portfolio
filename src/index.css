@@ -178,7 +178,8 @@ opacity: 0;
 }
 .view8-section,
 .view9-section,
-.view10-section {
+.view10-section,
+.view11-section {
 
   width: 100vw;
   height: 100vh;
@@ -529,11 +530,14 @@ opacity: 0;
   line-height: 1.5;
 }
 
+.view10-section,
+.view10-section-content,
 .view9-section,
 .view9-section-content {
   font-family: 'Press Start 2P', cursive !important;
 }
 
+.view10-section-content,
 .view9-section-content {
   width: 100vw;
   min-height: 100vh;
@@ -546,6 +550,7 @@ opacity: 0;
   background: transparent;
 }
 
+.view10-heading,
 .view9-heading {
   font-size: 1.3rem;
   margin-bottom: 2.5rem;
@@ -555,6 +560,7 @@ opacity: 0;
   text-transform: uppercase;
 }
 
+.view10-tiles,
 .view9-tiles {
   display: flex;
   flex-direction: row;
@@ -564,6 +570,7 @@ opacity: 0;
   justify-content: center;
 }
 
+.view10-tile,
 .view9-tile {
   display: flex;
   flex-direction: column;
@@ -580,6 +587,7 @@ opacity: 0;
   overflow: hidden;
 }
 
+.view10-img-wrapper,
 .view9-img-wrapper {
   width: calc(100% + 4rem);   /* Extend image to cover padding area */
   margin-left: -2rem;         /* Pull image to the left edge */
@@ -595,6 +603,7 @@ opacity: 0;
   padding: 0;
 }
 
+.view10-img-wrapper img,
 .view9-img-wrapper img {
   width: 100%;
   height: 100%;
@@ -603,6 +612,7 @@ opacity: 0;
   border-radius: 0;
 }
 
+.view10-tile-content,
 .view9-tile-content {
   width: 100%;
   text-align: left;
@@ -610,6 +620,7 @@ opacity: 0;
   padding-bottom: 0.5rem;
 }
 
+.view10-tile-content h2,
 .view9-tile-content h2 {
   font-size: 0.95rem;         /* Slightly larger */
   margin: 0 0 0.18rem 0;
@@ -617,6 +628,7 @@ opacity: 0;
   line-height: 1.35;
 }
 
+.view10-tile-content p,
 .view9-tile-content p {
   font-size: 0.75rem;         /* Slightly larger */
   margin: 0 0 0.18rem 0;
@@ -624,6 +636,7 @@ opacity: 0;
   line-height: 1.5;
 }
 
+.view10-tile-content ul,
 .view9-tile-content ul {
   margin: 0.18rem 0 0 1.2rem;
   padding: 0;
@@ -633,12 +646,12 @@ opacity: 0;
   line-height: 1.6;
 }
 
-.view10-section,
-.view10-section-content {
+.view11-section,
+.view11-section-content {
   font-family: 'Press Start 2P', cursive !important;
 }
 
-.view10-section-content {
+.view11-section-content {
   width: 100vw;
   min-height: 100vh;
   display: flex;
@@ -650,7 +663,7 @@ opacity: 0;
   background: transparent;
 }
 
-.view10-heading {
+.view11-heading {
   font-size: 1.3rem;
   margin-bottom: 2.5rem;
   letter-spacing: 0.02em;
@@ -700,7 +713,7 @@ opacity: 0;
   word-break: break-word;
 }
 
-.view11-section {
+.view12-section {
   min-height: 100vh;
   width: 100vw;
   display: flex;
@@ -711,7 +724,7 @@ opacity: 0;
   background: transparent;
 }
 
-.view11-section-content {
+.view12-section-content {
   width: 100vw;
   min-height: 100vh;
   display: flex;
@@ -723,7 +736,7 @@ opacity: 0;
   box-sizing: border-box;
 }
 
-.view11-top {
+.view12-top {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -731,7 +744,7 @@ opacity: 0;
   flex: 2 0 66%;
 }
 
-.view11-heading {
+.view12-heading {
   font-size: 1.3rem;
   margin-bottom: 2.2rem;
   letter-spacing: 0.02em;
@@ -740,7 +753,7 @@ opacity: 0;
   text-transform: uppercase;
 }
 
-.view11-about-row {
+.view12-about-row {
   display: flex;
   flex-direction: row;
   gap: 2.2rem;
@@ -750,9 +763,9 @@ opacity: 0;
   max-width: 1200px;
 }
 
-.view11-about-tile,
-.view11-workout-tile,
-.view11-portrait-tile {
+.view12-about-tile,
+.view12-workout-tile,
+.view12-portrait-tile {
   background: rgba(255,255,255,0.40);
   border-radius: 18px;
   box-shadow: 0 4px 16px 0 rgba(31,38,135,0.13);
@@ -766,14 +779,14 @@ opacity: 0;
   justify-content: center;
 }
 
-.view11-about-title {
+.view12-about-title {
   font-size: 0.8rem;
   color: #222;
   margin-bottom: 0.6rem;
   text-align: center;
 }
 
-.view11-about-desc {
+.view12-about-desc {
   font-size: 0.62rem;
   color: #444;
   margin-bottom: 0.7rem;
@@ -781,12 +794,12 @@ opacity: 0;
   text-align: left;
 }
 
-.view11-workout-tile {
+.view12-workout-tile {
   align-items: flex-start;
   justify-content: flex-start;
 }
 
-.view11-workout-title {
+.view12-workout-title {
   font-size: 0.8rem;
   color: #222;
   margin-bottom: 0.5rem;
@@ -794,7 +807,7 @@ opacity: 0;
   width: 100%;
 }
 
-.view11-workout-list {
+.view12-workout-list {
   font-size: 0.65rem;
   color: #333;
   padding-left: 1.2rem;
@@ -804,7 +817,7 @@ opacity: 0;
   width: 100%;
 }
 
-.view11-portrait-tile {
+.view12-portrait-tile {
   padding: 0.5rem;
   min-width: 180px;
   max-width: 220px;
@@ -815,7 +828,7 @@ opacity: 0;
   justify-content: center;
 }
 
-.view11-portrait-tile img {
+.view12-portrait-tile img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -823,7 +836,7 @@ opacity: 0;
   display: block;
 }
 
-.view11-bottom {
+.view12-bottom {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -838,7 +851,7 @@ opacity: 0;
   display: inline;
 }
 
-.view11-contact-heading {
+.view12-contact-heading {
   font-size: 1.1rem;
   color: #bdbdbd;
   margin-bottom: 1.2rem;
@@ -846,7 +859,7 @@ opacity: 0;
   letter-spacing: 0.02em;
 }
 
-.view11-contact-tiles {
+.view12-contact-tiles {
   display: flex;
   flex-direction: row;
   gap: 2rem;
@@ -854,7 +867,7 @@ opacity: 0;
   align-items: center;
 }
 
-.view11-contact-tile {
+.view12-contact-tile {
   background: rgba(255,255,255,0.40);
   border-radius: 14px;
   box-shadow: 0 4px 16px 0 rgba(31,38,135,0.13);
@@ -873,20 +886,20 @@ opacity: 0;
   gap: 0.5rem;
 }
 
-.view11-contact-icon {
+.view12-contact-icon {
   font-size: 2rem;      /* Keep icon size large */
   margin-bottom: 0.2rem;
 }
 
-.view11-contact-tile:hover,
-.view11-contact-tile:focus {
+.view12-contact-tile:hover,
+.view12-contact-tile:focus {
   box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
   background: rgba(255,255,255,0.65);
   transform: translateY(-6px) scale(1.04);
   cursor: pointer;
 }
 
-.view11-footer {
+.view12-footer {
   position: fixed;
   right: 1.2rem;
   bottom: 0.7rem;
@@ -900,12 +913,12 @@ opacity: 0;
 }
 
 @media (max-width: 900px) {
-  .view11-about-row {
+  .view12-about-row {
     flex-direction: column;
     align-items: center;
     gap: 1.2rem;
   }
-  .view11-portrait-tile {
+  .view12-portrait-tile {
     min-width: 140px;
     max-width: 220px;
     min-height: 180px;
@@ -1293,14 +1306,17 @@ opacity: 0;
     margin-left: 0;
     padding-left: 1.2rem;
   }
+    .view10-section-content,
     .view9-section-content {
     padding-top: 1.2rem;
   }
+  .view10-heading,
   .view9-heading {
     font-size: 1rem;
     margin-bottom: 1.2rem;
     padding: 0 4vw;
   }
+  .view10-tiles,
   .view9-tiles {
     flex-direction: column;
     gap: 1.2rem;
@@ -1309,6 +1325,7 @@ opacity: 0;
     padding: 0 1vw;
     align-items: center;
   }
+  .view10-tile,
   .view9-tile {
     min-width: unset;
     max-width: 98vw;
@@ -1316,6 +1333,7 @@ opacity: 0;
     height: auto;
     padding: 0.7rem 0.7rem 1.2rem 0.7rem;
   }
+  .view10-img-wrapper,
   .view9-img-wrapper {
        width: 100%;
     margin-left: 0;
@@ -1330,6 +1348,7 @@ opacity: 0;
     background: transparent;
     padding: 0;
   }
+  .view10-img-wrapper img,
   .view9-img-wrapper img {
     width: 100%;
     height: 100%;
@@ -1338,28 +1357,32 @@ opacity: 0;
     display: block;
     box-shadow: 0 4px 18px 0 rgba(31,38,135,0.18), 0 1.5px 8px 0 rgba(0,0,0,0.10);
   }
+  .view10-tile-content h2,
   .view9-tile-content h2 {
     font-size: 0.85rem;
     text-align: center;
   }
+  .view10-tile-content p,
+  .view10-tile-content ul,
   .view9-tile-content p,
   .view9-tile-content ul {
     font-size: 0.65rem;
     text-align: center;
     word-break: break-word;
   }
+  .view10-tile-content ul,
   .view9-tile-content ul {
     margin-left: 0;
     padding-left: 1.2rem;
   }
 
-    .view10-section-content {
+    .view11-section-content {
     padding-top: 1.2rem;
     min-height: 100vh;
     width: 100vw;
     box-sizing: border-box;
   }
-   .view10-heading {
+   .view11-heading {
     font-size: 1rem;
     margin-bottom: 3rem; /* Increased for more space below heading */
     padding: 0 4vw;
@@ -1389,33 +1412,33 @@ opacity: 0;
   .skill-label {
     font-size: 0.6rem;
   }
-  .view11-section-content {
+  .view12-section-content {
     padding-top: 1.2rem;
     min-height: 100vh;
     width: 100vw;
     box-sizing: border-box;
   }
-  .view11-top {
+  .view12-top {
     flex-direction: column;
     gap: 1.2rem;
     align-items: center;
   }
-  .view11-about-row {
+  .view12-about-row {
     flex-direction: column;
     gap: 1.2rem;
     align-items: center;
   }
-  .view11-workout-tile {
+  .view12-workout-tile {
     display: none; /* Hide workout split on phones */
   }
-   .view11-portrait-tile {
+   .view12-portrait-tile {
     min-width: 120px;
     max-width: 180px;
     min-height: 120px;
     max-height: 180px;
     padding: 0.2rem;
   }
-  .view11-heading {
+  .view12-heading {
     font-size: 1rem;
     margin-bottom: 1.2rem;
     padding: 0 4vw;
@@ -1428,27 +1451,40 @@ opacity: 0;
   .email-desktop {
     display: none;
   }
-  .view11-contact-heading {
+  .view12-contact-heading {
     font-size: 0.95rem;
     margin-bottom: 1rem;
   }
-  .view11-contact-tiles {
+  .view12-contact-tiles {
     flex-direction: row;   /* Keep them side by side */
     gap: 1rem;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;       /* Allows wrapping if there are many tiles */
   }
-  .view11-contact-tile {
+  .view12-contact-tile {
     min-width: 90px;
     font-size: 0.6rem;
     padding: 0.7rem 1rem;
   }
-  .view11-footer {
+  .view12-footer {
     font-size: 0.55rem;
     right: 0.5rem;
     bottom: 0.5rem;
   }
+}
+
+.view9-tiles {
+  display: flex;
+  flex-direction: row;
+  gap: 2.5rem;
+  width: 90vw;
+  max-width: 1500px;
+  justify-content: center;
+}
+.view9-tile {
+  min-width: 340px;
+  max-width: 440px;
 }
 
 

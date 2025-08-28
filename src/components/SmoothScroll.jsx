@@ -16,6 +16,7 @@ const SECTION_CLASSES = [
   ".view9-section",
   ".view10-section",
   ".view11-section",
+  ".view12-section",
 ];
 
 const SmoothScroll = () => {

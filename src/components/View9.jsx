@@ -1,50 +1,82 @@
-import React from 'react'
-import projectImg1 from '../assets/images/project1.jpg'
-import projectImg2 from '../assets/images/project2.jpeg'
+import React from "react";
+import projectImg1 from "../assets/images/project3.png";
+import projectImg2 from "../assets/images/project4.png";
 
 function View9() {
   return (
     <div className="view9-section">
       <div className="view9-section-content">
         <h1 className="view9-heading">Projects</h1>
-        <div className="view9-tiles">
+        <div
+          className="view9-tiles"
+          style={{
+            overflowX: "auto",
+            display: "flex",
+            flexDirection: "row",
+            gap: "2.5rem",
+            width: "90vw",
+            maxWidth: "1500px",
+            justifyContent: "center",
+            scrollSnapType: "x mandatory",
+            WebkitOverflowScrolling: "touch",
+          }}
+        >
           <div className="view9-tile">
             <div className="view9-img-wrapper">
-              <img src={projectImg1} alt="RealityScope: AR for Education" />
+              <img src={projectImg1} alt="LapMaker: AI Driver Coach" />
             </div>
             <div className="view9-tile-content">
-              <h2>RealityScope: AR for Education</h2>
-              <p>
-                An Android app that brings textbooks to life by displaying 3D models in AR, making complex engineering concepts easier to understand.
-              </p>
+              <h2>LapMaker</h2>
               <ul>
-                <li>Developed using Unity3D as the main platform.</li>
-                <li>3D models created in Blender.</li>
-                <li>AR features integrated with Vuforia in Unity3D.</li>
-                <li>Model attributes and functions specified using C#.</li>
+                <li>
+                  Cross-platform desktop app for racing simulator telemetry and
+                  AI-powered coaching.
+                </li>
+                <li>
+                  Real-time telemetry analysis, optimal lap extraction, and
+                  feedback using local LLMs with RAG.
+                </li>
+                <li>
+                  Contextual advice and session history with semantic memory and
+                  interactive UI.
+                </li>
+                <li>
+                  Delivers personalized, actionable feedback to help drivers
+                  improve performance over time.
+                </li>
               </ul>
             </div>
           </div>
           <div className="view9-tile">
             <div className="view9-img-wrapper">
-              <img src={projectImg2} alt="BookMyGround" />
+              <img src={projectImg2} alt="NLQ: Natural Language Querying" />
             </div>
             <div className="view9-tile-content">
-              <h2>BookMyGround</h2>
-              <p>
-                A dynamic web application for booking and managing payments for turfs and courts in specific time slots, with a responsive UI for all devices.
-              </p>
+              <h2>Natural Language Querying</h2>
               <ul>
-                <li>Backend built with Django and PostgreSQL database.</li>
-                <li>RESTful APIs for client-server data transfer.</li>
-                <li>Tested using Selenium and deployed on Microsoft Azure.</li>
+                <li>
+                  Full-stack app for querying SQL databases using natural
+                  language.
+                </li>
+                <li>
+                  Backend introspects schema and uses Ollama for secure,
+                  accurate SQL generation.
+                </li>
+                <li>
+                  Prompt engineering and context logic ensure accurate, secure
+                  queries.
+                </li>
+                <li>
+                  Dynamic schema extraction and secure execution with
+                  SQLAlchemy.
+                </li>
               </ul>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default View9
+export default View9;

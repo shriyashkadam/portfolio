@@ -1,42 +1,54 @@
-import React from 'react'
-import { FaBootstrap, FaAngular, FaPython, FaHtml5, FaCss3Alt, FaJs, FaDatabase, FaGitAlt, FaDocker } from "react-icons/fa";
-import { SiDotnet, SiApachekafka, SiCplusplus, SiTypescript, SiJavascript, SiMongodb } from "react-icons/si";
-import { LuUnplug } from "react-icons/lu"; // For WebSockets
-
-const skills = [
-  { icon: <FaBootstrap />, label: "Bootstrap" },
-  { icon: <FaAngular />, label: "Angular" },
-  { icon: <FaAngular />, label: "AngularJS" },
-  { icon: <SiDotnet />, label: ".NET Core" },
-  { icon: <SiApachekafka />, label: "Kafka" },
-  { icon: <FaDocker />, label: "Docker" },
-  { icon: <LuUnplug />, label: "WebSockets" }, // Updated icon
-  { icon: <SiCplusplus />, label: "C++" },
-  { icon: <FaPython />, label: "Python" },
-  { icon: <FaHtml5 />, label: "HTML" },
-  { icon: <FaJs />, label: "JavaScript" },
-  { icon: <SiTypescript />, label: "TypeScript" },
-  { icon: <FaCss3Alt />, label: "CSS" },
-  { icon: <FaDatabase />, label: "SQL" },
-  { icon: <SiMongodb />, label: "MongoDB" }
-];
+import React from "react";
+import projectImg1 from "../assets/images/project1.jpg";
+import projectImg2 from "../assets/images/project2.jpeg";
 
 function View10() {
   return (
     <div className="view10-section">
       <div className="view10-section-content">
-        <h1 className="view10-heading">Skills</h1>
-        <div className="skills-grid">
-          {skills.map((skill, idx) => (
-            <div className="skill-tile" key={idx}>
-              <div className="skill-icon">{skill.icon}</div>
-              <div className="skill-label">{skill.label}</div>
+        <h1 className="view10-heading">Projects</h1>
+        <div className="view10-tiles">
+          <div className="view10-tile">
+            <div className="view10-img-wrapper">
+              <img src={projectImg1} alt="RealityScope: AR for Education" />
             </div>
-          ))}
+            <div className="view10-tile-content">
+              <h2>RealityScope: AR for Education</h2>
+              <p>
+                An Android app that brings textbooks to life by displaying 3D
+                models in AR, making complex engineering concepts easier to
+                understand.
+              </p>
+              <ul>
+                <li>Developed using Unity3D as the main platform.</li>
+                <li>3D models created in Blender.</li>
+                <li>AR features integrated with Vuforia in Unity3D.</li>
+                <li>Model attributes and functions specified using C#.</li>
+              </ul>
+            </div>
+          </div>
+          <div className="view10-tile">
+            <div className="view10-img-wrapper">
+              <img src={projectImg2} alt="BookMyGround" />
+            </div>
+            <div className="view10-tile-content">
+              <h2>BookMyGround</h2>
+              <p>
+                A dynamic web application for booking and managing payments for
+                turfs and courts in specific time slots, with a responsive UI
+                for all devices.
+              </p>
+              <ul>
+                <li>Backend built with Django and PostgreSQL database.</li>
+                <li>RESTful APIs for client-server data transfer.</li>
+                <li>Tested using Selenium and deployed on Microsoft Azure.</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default View10
+export default View10;

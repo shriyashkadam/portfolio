@@ -9,6 +9,7 @@ import View8 from "./components/View8.jsx";
 import View9 from "./components/View9.jsx";
 import View10 from "./components/View10.jsx";
 import View11 from "./components/View11.jsx";
+import View12 from "./components/View12.jsx";
 import Navbar from "./components/Navbar.jsx";
 import ScrollDown from "./components/ScrollDown.jsx";
 import WebgiViewer from "./components/WebgiViewer";
@@ -58,6 +59,7 @@ function App() {
         <View9 />
         <View10 />
         <View11 />
+        <View12 />
       </div>
       <WebgiViewer ref={webgiViewerRef} contentRef={contentRef} />
     </div>

@@ -1,10 +1,22 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from "react";
 
 const tileContent = [
-  { title: "Work Experience", desc: "See my professional journey and roles I've held.", target: ".view8-section" },
-  { title: "Projects", desc: "Explore some of the projects I have built.", target: ".view9-section" },
-  { title: "Skills", desc: "Discover my skillset.", target: ".view10-section" },
-  { title: "Contact Me", desc: "Let's connect! Reach out for collaboration or questions.", target: ".view11-section" }
+  {
+    title: "Work Experience",
+    desc: "See my professional journey and roles I've held.",
+    target: ".view8-section",
+  },
+  {
+    title: "Projects",
+    desc: "Explore some of the projects I have built.",
+    target: ".view9-section",
+  },
+  { title: "Skills", desc: "Discover my skillset.", target: ".view11-section" },
+  {
+    title: "Contact Me",
+    desc: "Let's connect! Reach out for collaboration or questions.",
+    target: ".view12-section",
+  },
 ];
 
 function View7() {
@@ -38,19 +50,19 @@ function View7() {
         tile.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
       };
       const handleMouseLeave = () => {
-        tile.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg)';
+        tile.style.transform = "perspective(600px) rotateX(0deg) rotateY(0deg)";
       };
-      tile.addEventListener('mousemove', handleMouseMove);
-      tile.addEventListener('mouseleave', handleMouseLeave);
-      tile.addEventListener('blur', handleMouseLeave);
+      tile.addEventListener("mousemove", handleMouseMove);
+      tile.addEventListener("mouseleave", handleMouseLeave);
+      tile.addEventListener("blur", handleMouseLeave);
     });
     // Cleanup
     return () => {
       tileRefs.current.forEach((tile) => {
         if (!tile) return;
-        tile.removeEventListener('mousemove', () => {});
-        tile.removeEventListener('mouseleave', () => {});
-        tile.removeEventListener('blur', () => {});
+        tile.removeEventListener("mousemove", () => {});
+        tile.removeEventListener("mouseleave", () => {});
+        tile.removeEventListener("blur", () => {});
       });
     };
   }, [showTiles]);
@@ -67,7 +79,10 @@ function View7() {
   };
 
   return (
-    <div className="view7-section" style={{ position: "relative", overflow: "hidden" }}>
+    <div
+      className="view7-section"
+      style={{ position: "relative", overflow: "hidden" }}
+    >
       <div
         className="view7-tiles"
         style={{
@@ -75,7 +90,7 @@ function View7() {
           pointerEvents: showTiles ? "auto" : "none",
           transition: "opacity 0.8s cubic-bezier(.4,0,.2,1)",
           position: "relative",
-          zIndex: 1
+          zIndex: 1,
         }}
       >
         {tileContent.map((tile, i) => (
@@ -83,7 +98,7 @@ function View7() {
             className="view7-tile"
             key={i}
             tabIndex={0}
-            ref={el => tileRefs.current[i] = el}
+            ref={(el) => (tileRefs.current[i] = el)}
             onClick={() => handleTileClick(tile.target)}
             style={{ cursor: "pointer" }}
           >
