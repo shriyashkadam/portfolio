@@ -4,7 +4,7 @@ export default function SocialsBar() {
   return (
     <div className="socials-bar">
       <a
-        href="https://www.canva.com/design/DAFS_BzCPzc/AldbSYECG5MoWqgqB385bg/view?utm_content=DAFS_BzCPzc&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h7fb4e2a0eb" // Update this path to your actual resume file
+        href="/resume.pdf"
         className="socials-icon"
         target="_blank"
         rel="noopener noreferrer"
