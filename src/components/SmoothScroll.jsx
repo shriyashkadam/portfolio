@@ -27,12 +27,39 @@ const SmoothScroll = () => {
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
+    // Phones/tablets: use fully native scrolling. Lenis smooth scroll is a
+    // desktop enhancement, and on touch it keeps its own scroll state alongside
+    // non-passive touch listeners, which can break native touch scrolling
+    // (page only scrolling in part of the screen). ScrollTrigger updates itself
+    // from native scroll events, so the 3D model animation still works here.
+    const isTouch = window.matchMedia("(hover: none) and (pointer: coarse)")
+      .matches;
 
     // Always start at the top instead of the browser restoring a mid-page offset
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
     window.scrollTo(0, 0);
+
+    if (isTouch || reducedMotion) {
+      // Section jumps (View7 tiles) fall back to the browser's own scrolling.
+      window.scrollToSection = (target) => {
+        const el =
+          typeof target === "string" ? document.querySelector(target) : target;
+        const top =
+          typeof target === "number"
+            ? target
+            : el && el.getBoundingClientRect().top + window.scrollY;
+        if (typeof top === "number") {
+          window.scrollTo({ top, behavior: reducedMotion ? "auto" : "smooth" });
+        }
+      };
+      window.setSmoothScrollSection = () => {};
+      return () => {
+        delete window.scrollToSection;
+        delete window.setSmoothScrollSection;
+      };
+    }
 
     const lenis = new Lenis({
       duration: 1.1,
