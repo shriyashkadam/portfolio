@@ -11,24 +11,26 @@
 
 body {
   margin: 0;
-  
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #e0e6eb;
   scrollbar-width: none; /* Firefox */
-  overflow-y: scroll;    /* Always show scroll area, but hide bar */
 }
-html, body {
-  width: 100vw;
-  min-height: 100vh;
+/* Clip horizontal overflow on <html> only. Putting overflow-x:hidden on BOTH
+   html and body (and forcing overflow-y on body) makes the body a second
+   scroll container, which breaks touch/momentum scrolling on iOS Safari.
+   Let the viewport (html) be the single scroller. */
+html {
+  width: 100%;
   overflow-x: hidden;
-  /* Never let the UA smooth-scroll on top of Lenis, and kill rubber-banding
-     / pull-to-refresh so the smooth scroll stays continuous. */
-  scroll-behavior: auto;
-  overscroll-behavior-y: none;
+}
+body {
+  width: 100%;
+  min-height: 100vh;
 }
 
-/* Used by Lenis when scrolling is programmatically stopped */
+/* Used by Lenis (desktop only) when scrolling is programmatically stopped */
 html.lenis-stopped {
   overflow: hidden;
 }
@@ -325,11 +327,13 @@ opacity: 0;
   /* Fades out when the boot video ends (see Loader.jsx), not on a fixed timer */
   opacity: 1;
   transition: opacity 0.6s ease;
+  /* Purely visual — must never intercept touch, or the page can't be scrolled
+     while (or if) the boot screen is on top. */
+  pointer-events: none;
 }
 
 .loader.is-done {
   opacity: 0;
-  pointer-events: none;
 }
 
 .loader-video {
@@ -338,6 +342,15 @@ opacity: 0;
   width: 100vw;
   height: 100vh;
   object-fit: contain;
+}
+
+/* The video is landscape, so on a portrait screen (phones) `contain` leaves
+   black bars top & bottom. Fill instead — the logo is centred, so cover only
+   crops the empty side margins, not the logo. */
+@media (orientation: portrait) {
+  .loader-video {
+    object-fit: cover;
+  }
 }
 
 .loader .logo {
