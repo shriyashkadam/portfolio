@@ -22,6 +22,21 @@ html, body {
   width: 100vw;
   min-height: 100vh;
   overflow-x: hidden;
+  /* Never let the UA smooth-scroll on top of Lenis, and kill rubber-banding
+     / pull-to-refresh so the smooth scroll stays continuous. */
+  scroll-behavior: auto;
+  overscroll-behavior-y: none;
+}
+
+/* Used by Lenis when scrolling is programmatically stopped */
+html.lenis-stopped {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html, body {
+    scroll-behavior: auto;
+  }
 }
 
 html::-webkit-scrollbar,
@@ -178,7 +193,6 @@ opacity: 0;
 }
 .view8-section,
 .view9-section,
-.view10-section,
 .view11-section {
 
   width: 100vw;
@@ -308,11 +322,22 @@ opacity: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  animation-name: fadeOut;
-  animation-duration: 0.3s;
-  animation-delay: 6s;
-  animation-fill-mode: forwards;
+  /* Fades out when the boot video ends (see Loader.jsx), not on a fixed timer */
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+.loader.is-done {
+  opacity: 0;
   pointer-events: none;
+}
+
+.loader-video {
+  /* Fill the screen and scale the logo up; contain keeps the whole frame
+     visible (never cropped), and the black letterbox is invisible on black. */
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
 }
 
 .loader .logo {
@@ -376,16 +401,6 @@ opacity: 0;
 .view5-section *,
 .view6-section * {
   font-family: 'Poppins', sans-serif !important;
-}
-
-.view1-section h1 {
-  font-size: 3.2rem;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  line-height: 1.1;
-  color: #f5f5f7;
-  margin: 0;
-  text-align: center;
 }
 
 
@@ -530,17 +545,14 @@ opacity: 0;
   line-height: 1.5;
 }
 
-.view10-section,
-.view10-section-content,
 .view9-section,
 .view9-section-content {
   font-family: 'Press Start 2P', cursive !important;
 }
 
-.view10-section-content,
 .view9-section-content {
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -550,100 +562,224 @@ opacity: 0;
   background: transparent;
 }
 
-.view10-heading,
 .view9-heading {
   font-size: 1.3rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.6rem;
   letter-spacing: 0.02em;
   text-align: center;
   color: #bdbdbd;
   text-transform: uppercase;
 }
 
-.view10-tiles,
-.view9-tiles {
+/* ---- Projects cover flow ---------------------------------------------- */
+
+.coverflow {
+  /* Wide on desktop, but clamps down on narrower laptops so it never
+     overflows the viewport (padding-inline keeps the active card centred). */
+  --card-w: min(520px, 46vw);
+  --card-h: min(560px, 64vh);
+  --card-overlap: 0.42; /* how far each card tucks under its neighbour */
+  position: relative;
+  width: 100vw;
+  flex: 1 1 auto;
   display: flex;
-  flex-direction: row;
-  gap: 2.5rem;
-  width: 90vw;
-  max-width: 1500px;
-  justify-content: center;
+  align-items: center;
+  min-height: 0;
 }
 
-.view10-tile,
-.view9-tile {
+.coverflow-track {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: calc(var(--card-h) + 80px);
+  padding-inline: calc(50% - var(--card-w) / 2);
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Snapping is done in JS (ProjectsCarousel.jsx): CSS mandatory snap measures
+     the transformed box and lands between cards once they overlap. */
+  -webkit-overflow-scrolling: touch;
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+  outline: none;
+  /* Horizontal swipes drive the carousel, vertical ones stay with the page */
+  touch-action: pan-x pan-y;
+  scrollbar-width: none;
+}
+
+.coverflow-track::-webkit-scrollbar {
+  display: none;
+}
+
+.coverflow-track.is-dragging {
+  cursor: grabbing;
+}
+
+.coverflow-card {
+  flex: 0 0 var(--card-w);
+  width: var(--card-w);
+  height: var(--card-h);
+  /* Overlap lives here, not in the transform — see ProjectsCarousel.jsx */
+  margin-left: calc(var(--card-w) * var(--card-overlap) * -1);
+  backface-visibility: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(255,255,255,0.40);
+  background: rgba(255, 255, 255, 0.40);
   border-radius: 22px;
-  box-shadow: 0 8px 28px 0 rgba(31,38,135,0.13);
-  min-width: 340px;           /* Slightly less wide */
-  max-width: 440px;           /* Slightly less wide */
-  height: 520px;
-  padding: 0 2rem 2rem 2rem;
+  box-shadow: 0 8px 28px 0 rgba(31, 38, 135, 0.13);
+  padding: 0 2rem 1.6rem 2rem;
   position: relative;
-  z-index: 1;
   overflow: hidden;
+  cursor: pointer;
+  will-change: transform, opacity;
+  transform-origin: 50% 50%;
+  /* Only the snap-back is animated; scrub transforms are set per frame */
+  transition: box-shadow 0.3s ease, background 0.3s ease;
 }
 
-.view10-img-wrapper,
-.view9-img-wrapper {
-  width: calc(100% + 4rem);   /* Extend image to cover padding area */
-  margin-left: -2rem;         /* Pull image to the left edge */
-  margin-right: -2rem;        /* Pull image to the right edge */
-  height: 220px;              /* Taller image for longer tile */
+.coverflow-card:first-child {
+  margin-left: 0; /* keeps the leading padding centring the first project */
+}
+
+.coverflow-card.is-active {
+  background: rgba(255, 255, 255, 0.52);
+  box-shadow: 0 28px 60px 0 rgba(0, 0, 0, 0.38),
+    0 0 0 1px rgba(255, 255, 255, 0.22) inset;
+  cursor: default;
+}
+
+/* Sheen across the angled cards, like light catching an album cover */
+.coverflow-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.28) 0%,
+    rgba(255, 255, 255, 0) 45%
+  );
+}
+
+.coverflow-img {
+  width: calc(100% + 4rem);
+  margin: 0 -2rem 1.2rem -2rem;
+  /* Proportional to the card so text keeps its room on short viewports */
+  flex: 0 0 42%;
+  min-height: 0;
   background: #eaeaea;
   border-radius: 18px 18px 0 0;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.2rem;
-  padding: 0;
 }
 
-.view10-img-wrapper img,
-.view9-img-wrapper img {
+.coverflow-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  border-radius: 0;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
-.view10-tile-content,
-.view9-tile-content {
+.coverflow-body {
   width: 100%;
   text-align: left;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  min-height: 0;
+  overflow: hidden;
+  /* Fade rather than hard-clip if a card runs long on a short viewport */
+  -webkit-mask-image: linear-gradient(#000 84%, transparent 100%);
+  mask-image: linear-gradient(#000 84%, transparent 100%);
 }
 
-.view10-tile-content h2,
-.view9-tile-content h2 {
-  font-size: 0.95rem;         /* Slightly larger */
-  margin: 0 0 0.18rem 0;
+.coverflow-body h2 {
+  font-size: 0.95rem;
+  margin: 0 0 0.35rem 0;
   color: #222;
   line-height: 1.35;
 }
 
-.view10-tile-content p,
-.view9-tile-content p {
-  font-size: 0.75rem;         /* Slightly larger */
-  margin: 0 0 0.18rem 0;
+.coverflow-body p {
+  font-size: 0.7rem;
+  margin: 0 0 0.3rem 0;
   color: #444;
   line-height: 1.5;
 }
 
-.view10-tile-content ul,
-.view9-tile-content ul {
+.coverflow-body ul {
   margin: 0.18rem 0 0 1.2rem;
   padding: 0;
-  font-size: 0.7rem;          /* Slightly larger */
+  font-size: 0.65rem;
   color: #333;
   list-style: disc;
   line-height: 1.6;
+}
+
+.coverflow-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 200;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  color: #f5f5f7;
+  font-size: 1.6rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+
+.coverflow-arrow:hover:not(:disabled) {
+  background: rgba(250, 7, 214, 0.55);
+  box-shadow: 0 0 18px 0 rgba(250, 7, 214, 0.6);
+}
+
+.coverflow-arrow:disabled {
+  opacity: 0.22;
+  cursor: default;
+}
+
+.coverflow-arrow-prev {
+  left: 3vw;
+}
+
+.coverflow-arrow-next {
+  right: 3vw;
+}
+
+.coverflow-dots {
+  position: absolute;
+  bottom: 0.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 200;
+}
+
+.coverflow-dot {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+  cursor: pointer;
+  transition: background 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+
+.coverflow-dot.is-active {
+  background: #fa07d6;
+  transform: scale(1.35);
+  box-shadow: 0 0 12px 0 rgba(250, 7, 214, 0.8);
 }
 
 .view11-section,
@@ -1137,6 +1273,77 @@ opacity: 0;
   position: relative;
 }
 
+/* ---- Scroll-reveal headings (View1–View5, behind the 3D model) --------- */
+
+/* Sits BEHIND the transparent model canvas (z-index -1) and above the space
+   background (-5): the copy shows through the empty parts of the canvas and is
+   naturally occluded by the model wherever they overlap — never in front. */
+.view-heading {
+  position: relative;
+  z-index: -1;
+  margin-top: clamp(44px, 6vh, 92px);
+  width: min(94vw, 1100px);
+  padding: 0 4vw;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* View5: the headset fills the frame, so the copy drops into the open space
+   inside the headset opening instead of the (now covered) top band. */
+.view-heading-center {
+  margin-top: clamp(150px, 34vh, 320px);
+}
+
+.srt {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+  color: #fff;
+  perspective: 900px;
+}
+
+.srt-eyebrow {
+  display: block;
+  overflow: hidden;
+  margin-bottom: clamp(10px, 1.6vh, 20px);
+  font-size: clamp(0.58rem, 1.4vw, 0.78rem);
+  font-weight: 600;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: #cbb9ff;
+}
+
+.srt-line {
+  display: block;
+  font-size: clamp(2rem, 6vw, 3.6rem);
+}
+
+.view-heading-sm .srt-line {
+  font-size: clamp(1.35rem, 4vw, 2.5rem);
+}
+
+.srt-word {
+  display: inline-block;
+  /* Glow lives on the wrapper so the animated blur on .srt-inner is free to
+     resolve to a crisp 0px without wiping out the shadow. */
+  filter: drop-shadow(0 3px 22px rgba(250, 7, 214, 0.45))
+    drop-shadow(0 1px 3px rgba(0, 0, 0, 0.55));
+}
+
+.srt-inner {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+}
+
+/* Gradient fill only on the headline words, not the eyebrow */
+.srt-line .srt-inner {
+  background: linear-gradient(178deg, #ffffff 0%, #ffe1fb 52%, #cdb8ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 .persistent-glow-bg {
   position: fixed;
   top: 48%;
@@ -1235,6 +1442,21 @@ opacity: 0;
     filter: blur(18px);
     top: 55%;
   }
+  /* Keep the copy in a tighter top band on phones, where the model sits
+     larger and higher in frame. */
+  .view-heading {
+    margin-top: clamp(72px, 12vh, 110px);
+    padding: 0 6vw;
+  }
+  .srt-line {
+    font-size: clamp(1.7rem, 8.5vw, 2.4rem);
+  }
+  .view-heading-sm .srt-line {
+    font-size: clamp(1.15rem, 6vw, 1.7rem);
+  }
+  .srt-eyebrow {
+    letter-spacing: 0.26em;
+  }
   .view1-main-text {
     font-size: 2rem;
     margin-top: 90px;
@@ -1306,74 +1528,45 @@ opacity: 0;
     margin-left: 0;
     padding-left: 1.2rem;
   }
-    .view10-section-content,
-    .view9-section-content {
+  .view9-section-content {
     padding-top: 1.2rem;
   }
-  .view10-heading,
   .view9-heading {
     font-size: 1rem;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1rem;
     padding: 0 4vw;
   }
-  .view10-tiles,
-  .view9-tiles {
-    flex-direction: column;
-    gap: 1.2rem;
-    max-width: 98vw;
-    width: 98vw;
-    padding: 0 1vw;
-    align-items: center;
+  .coverflow {
+    /* Fill most of the screen on a phone; cap the height so the whole card
+       (image + text) fits above the fold on short viewports. */
+    --card-w: min(400px, 86vw);
+    --card-h: min(500px, 70vh);
+    --card-overlap: 0.34; /* less tuck so the neighbours still peek at the edges */
   }
-  .view10-tile,
-  .view9-tile {
-    min-width: unset;
-    max-width: 98vw;
-    width: 100%;
-    height: auto;
-    padding: 0.7rem 0.7rem 1.2rem 0.7rem;
+  .coverflow-track {
+    perspective: 900px;
   }
-  .view10-img-wrapper,
-  .view9-img-wrapper {
-       width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    height: 90px;           /* Reduced from 140px to 90px */
-    margin-bottom: 0.7rem;
-    border-radius: 14px 14px 0 0;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    padding: 0;
+  .coverflow-card {
+    padding: 0 1.2rem 1.2rem 1.2rem;
   }
-  .view10-img-wrapper img,
-  .view9-img-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    border-radius: 12px;
-    display: block;
-    box-shadow: 0 4px 18px 0 rgba(31,38,135,0.18), 0 1.5px 8px 0 rgba(0,0,0,0.10);
+  .coverflow-img {
+    width: calc(100% + 2.4rem);
+    margin: 0 -1.2rem 1rem -1.2rem;
+    height: 42vw;
+    max-height: 200px;
+    flex: 0 0 auto;
   }
-  .view10-tile-content h2,
-  .view9-tile-content h2 {
-    font-size: 0.85rem;
-    text-align: center;
+  .coverflow-body h2 {
+    font-size: 0.82rem;
   }
-  .view10-tile-content p,
-  .view10-tile-content ul,
-  .view9-tile-content p,
-  .view9-tile-content ul {
-    font-size: 0.65rem;
-    text-align: center;
+  .coverflow-body p,
+  .coverflow-body ul {
+    font-size: 0.62rem;
     word-break: break-word;
   }
-  .view10-tile-content ul,
-  .view9-tile-content ul {
-    margin-left: 0;
-    padding-left: 1.2rem;
+  /* The arrows sit under a thumb on a phone — swiping is the gesture there */
+  .coverflow-arrow {
+    display: none;
   }
 
     .view11-section-content {
@@ -1474,17 +1667,10 @@ opacity: 0;
   }
 }
 
-.view9-tiles {
-  display: flex;
-  flex-direction: row;
-  gap: 2.5rem;
-  width: 90vw;
-  max-width: 1500px;
-  justify-content: center;
-}
-.view9-tile {
-  min-width: 340px;
-  max-width: 440px;
+@media (prefers-reduced-motion: reduce) {
+  .coverflow-track {
+    scroll-behavior: auto;
+  }
 }
 
 

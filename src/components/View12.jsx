@@ -1,6 +1,6 @@
 import React from "react";
 import { FaLinkedin, FaGithub, FaRegEnvelope } from "react-icons/fa";
-import portraitImg from "../assets/images/portrait.jpg"; // Replace with your actual image path
+import portraitImg from "../assets/images/portrait2.jpeg"; // Replace with your actual image path
 
 const workoutSplit = [
   "Day 1: Upper Body (Chest, Shoulders, Back, Forearms)",

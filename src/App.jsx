@@ -7,7 +7,6 @@ import View6 from "./components/View6.jsx";
 import View7 from "./components/View7.jsx";
 import View8 from "./components/View8.jsx";
 import View9 from "./components/View9.jsx";
-import View10 from "./components/View10.jsx";
 import View11 from "./components/View11.jsx";
 import View12 from "./components/View12.jsx";
 import Navbar from "./components/Navbar.jsx";
@@ -25,16 +24,28 @@ function App() {
   const [showNav, setShowNav] = useState(true);
 
   useEffect(() => {
-    const handleScroll = () => {
+    let frame = null;
+
+    const evaluate = () => {
+      frame = null;
       const view6 = document.querySelector(".view6-section");
       if (view6) {
         const rect = view6.getBoundingClientRect();
         setShowNav(rect.top > 0);
       }
     };
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initial check
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    const handleScroll = () => {
+      if (frame === null) frame = requestAnimationFrame(evaluate);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    evaluate(); // Initial check
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
   }, []);
 
   return (
@@ -57,7 +68,6 @@ function App() {
         <View7 />
         <View8 />
         <View9 />
-        <View10 />
         <View11 />
         <View12 />
       </div>

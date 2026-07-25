@@ -31,7 +31,6 @@ const SECTION_CLASSES = [
   ".view7-section",
   ".view8-section",
   ".view9-section",
-  ".view10-section",
   ".view11-section",
   ".view12-section",
   // Add more if you have more views
@@ -133,63 +132,76 @@ const WebgiViewer = forwardRef((props, ref) => {
     canvasContainer.style.transition = "opacity 0.8s cubic-bezier(.4,0,.2,1)";
 
     let hideTimeout = null;
+    let fadeTimeout = null;
+    let frame = null;
+    let hidden = null; // last applied canvas state, so we only react to changes
+    let tilesVisible = null;
 
-    function checkSection() {
-      let currentSection = 0;
+    const setTiles = (visible) => {
+      if (visible === tilesVisible) return;
+      tilesVisible = visible;
+      window.dispatchEvent(
+        new Event(visible ? "showView7Tiles" : "hideView7Tiles")
+      );
+    };
+
+    const currentSectionIndex = () => {
+      const middle = window.innerHeight / 2;
       for (let i = 0; i < SECTION_CLASSES.length; i++) {
         const el = document.querySelector(SECTION_CLASSES[i]);
         if (el) {
           const rect = el.getBoundingClientRect();
-          if (
-            rect.top <= window.innerHeight / 2 &&
-            rect.bottom > window.innerHeight / 2
-          ) {
-            currentSection = i;
-            break;
-          }
+          if (rect.top <= middle && rect.bottom > middle) return i;
         }
       }
+      return 0;
+    };
 
-      if (hideTimeout) {
-        clearTimeout(hideTimeout);
-        hideTimeout = null;
-      }
+    function checkSection() {
+      frame = null;
+      const currentSection = currentSectionIndex();
+      const shouldHide = currentSection >= 6;
 
-      if (currentSection >= 6) {
-        if (canvasContainer.style.opacity !== "0") {
+      if (shouldHide) {
+        if (hidden !== true) {
+          hidden = true;
+          // Let the model linger for a beat before dissolving out
           hideTimeout = setTimeout(() => {
+            hideTimeout = null;
             canvasContainer.style.opacity = "0";
-            setTimeout(() => {
+            fadeTimeout = setTimeout(() => {
+              fadeTimeout = null;
               canvasContainer.style.pointerEvents = "none";
-              if (currentSection === 6) {
-                window.dispatchEvent(new Event("showView7Tiles"));
-              } else {
-                window.dispatchEvent(new Event("hideView7Tiles"));
-              }
+              setTiles(currentSectionIndex() === 6);
             }, 800);
           }, 1000);
-        } else {
-          if (currentSection === 6) {
-            window.dispatchEvent(new Event("showView7Tiles"));
-          } else {
-            window.dispatchEvent(new Event("hideView7Tiles"));
-          }
+        } else if (!hideTimeout && !fadeTimeout) {
+          // Canvas already faded — tiles just follow the current section
+          setTiles(currentSection === 6);
         }
-      } else {
-        if (canvasContainer.style.opacity !== "1") {
-          canvasContainer.style.opacity = "1";
-          canvasContainer.style.pointerEvents = previewMode ? "all" : "none";
-          window.dispatchEvent(new Event("hideView7Tiles"));
-        }
+      } else if (hidden !== false) {
+        hidden = false;
+        if (hideTimeout) clearTimeout(hideTimeout);
+        if (fadeTimeout) clearTimeout(fadeTimeout);
+        hideTimeout = fadeTimeout = null;
+        canvasContainer.style.opacity = "1";
+        canvasContainer.style.pointerEvents = previewMode ? "all" : "none";
+        setTiles(false);
       }
     }
 
-    window.addEventListener("scroll", checkSection);
+    const onScroll = () => {
+      if (frame === null) frame = requestAnimationFrame(checkSection);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
     checkSection();
 
     return () => {
-      window.removeEventListener("scroll", checkSection);
+      window.removeEventListener("scroll", onScroll);
+      if (frame !== null) cancelAnimationFrame(frame);
       if (hideTimeout) clearTimeout(hideTimeout);
+      if (fadeTimeout) clearTimeout(fadeTimeout);
     };
   }, [setupViewer, previewMode]);
 

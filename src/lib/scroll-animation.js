@@ -2,6 +2,12 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
+// With free (non-snapping) scrolling the page can rest anywhere, so the
+// outgoing copy is faded out before the incoming copy fades in instead of
+// cross-fading over the same range — otherwise both read as ghosted overlays.
+const FADE_OUT = { start: "top 85%", end: "top 55%" };
+const FADE_IN = { start: "top 62%", end: "top 28%" };
+
 export const scrollAnimation = (position, target, isMobile, onUpdate) => {
   // Helper for DRY code
   const pos = (x, y, z) => ({ x, y, z });
@@ -170,10 +176,11 @@ export const scrollAnimation = (position, target, isMobile, onUpdate) => {
   ].forEach(({ section, trigger }) => {
     gsap.to(section, {
       opacity: 0,
+      ease: "none",
       scrollTrigger: {
         trigger,
-        start: "top 80%",
-        end: "top 20%",
+        start: FADE_OUT.start,
+        end: FADE_OUT.end,
         scrub: true,
         immediateRender: false,
         invalidateOnRefresh: true,
@@ -191,10 +198,11 @@ export const scrollAnimation = (position, target, isMobile, onUpdate) => {
   ].forEach(({ section, trigger }) => {
     gsap.to(section, {
       opacity: 1,
+      ease: "none",
       scrollTrigger: {
         trigger,
-        start: "top 80%",
-        end: "top 20%",
+        start: FADE_IN.start,
+        end: FADE_IN.end,
         scrub: true,
         immediateRender: false,
         invalidateOnRefresh: true,

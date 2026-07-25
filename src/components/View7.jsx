@@ -70,11 +70,12 @@ function View7() {
   // Scroll to section on tile click
   const handleTileClick = (targetSelector) => {
     const section = document.querySelector(targetSelector);
-    if (section) {
+    if (!section) return;
+    // Route through the smooth scroller so it doesn't fight the native one
+    if (window.scrollToSection) {
+      window.scrollToSection(section);
+    } else {
       section.scrollIntoView({ behavior: "smooth" });
-      if (window.setSmoothScrollSection) {
-        window.setSmoothScrollSection(targetSelector);
-      }
     }
   };
 

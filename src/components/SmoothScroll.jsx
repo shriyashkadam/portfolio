@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
+import Lenis from "@studio-freight/lenis";
 import gsap from "gsap";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
+
+gsap.registerPlugin(ScrollTrigger);
 
 const SECTION_CLASSES = [
   ".view1-section",
@@ -14,204 +15,169 @@ const SECTION_CLASSES = [
   ".view7-section",
   ".view8-section",
   ".view9-section",
-  ".view10-section",
   ".view11-section",
   ".view12-section",
 ];
 
+// Section index from which the persistent background takes over (view7)
+const PERSISTENT_BG_FROM = 6;
+
 const SmoothScroll = () => {
-  const sectionRefs = useRef([]);
-  const currentSection = useRef(0);
-  const isAnimating = useRef(false);
-
-  window.setSmoothScrollSection = (sectionSelector) => {
-    const idx = SECTION_CLASSES.findIndex((sel) => sel === sectionSelector);
-    if (idx !== -1) {
-      currentSection.current = idx;
-    }
-  };
-
   useEffect(() => {
-    sectionRefs.current = SECTION_CLASSES.map((sel) =>
-      document.querySelector(sel)
-    ).filter(Boolean);
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
 
-    // Always snap to the current section on load
-    window.scrollTo({
-      top: sectionRefs.current[0]?.offsetTop || 0,
-      behavior: "auto",
+    // Always start at the top instead of the browser restoring a mid-page offset
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
+
+    const lenis = new Lenis({
+      duration: 1.1,
+      // expo-out: fast pickup, long soft landing
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smooth: !reducedMotion,
+      smoothTouch: false, // let mobile keep its native momentum scrolling
+      touchMultiplier: 1.8,
+      mouseMultiplier: 1,
+      gestureDirection: "vertical",
     });
 
-    const onWheel = (e) => {
-      if (isAnimating.current) {
-        e.preventDefault();
+    // Exposed so other components can request a smooth scroll (see View7 tiles)
+    window.lenis = lenis;
+    window.scrollToSection = (target, options) => {
+      // On touch devices Lenis hands scrolling back to the browser, and in that
+      // state its own scrollTo jumps instantly — use the native one instead.
+      if (!lenis.smooth) {
+        const el =
+          typeof target === "string" ? document.querySelector(target) : target;
+        const top =
+          typeof target === "number"
+            ? target
+            : el && el.getBoundingClientRect().top + window.scrollY;
+        if (typeof top === "number") {
+          window.scrollTo({
+            top,
+            behavior: reducedMotion ? "auto" : "smooth",
+          });
+        }
         return;
       }
+      lenis.scrollTo(target, { duration: 1.6, ...options });
+    };
+    // Legacy hook from the old snap-scroller; kept so old callers don't throw
+    window.setSmoothScrollSection = () => {};
 
-      let direction = e.deltaY > 0 ? 1 : -1;
-      let nextSection = currentSection.current + direction;
+    // Keep GSAP scroll-driven animations in sync with Lenis' virtual scroll
+    const onLenisScroll = () => ScrollTrigger.update();
+    lenis.on("scroll", onLenisScroll);
 
-      // Prevent scrolling down if already at last section
+    const raf = (time) => lenis.raf(time * 1000);
+    gsap.ticker.add(raf);
+    gsap.ticker.lagSmoothing(0);
+
+    // Smooth keyboard scrolling (Lenis leaves keys to the browser, which jumps)
+    const onKeyDown = (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const tag = e.target?.tagName;
       if (
-        currentSection.current === sectionRefs.current.length - 1 &&
-        direction === 1
+        tag === "INPUT" ||
+        tag === "TEXTAREA" ||
+        tag === "SELECT" ||
+        e.target?.isContentEditable
       ) {
-        e.preventDefault();
-        return;
-      }
-      // Prevent scrolling up if already at first section
-      if (currentSection.current === 0 && direction === -1) {
-        e.preventDefault();
         return;
       }
 
-      // Clamp to valid section range
-      nextSection = Math.max(
-        0,
-        Math.min(sectionRefs.current.length - 1, nextSection)
-      );
+      const page = window.innerHeight * 0.9;
+      let target = null;
 
-      if (nextSection === currentSection.current) {
-        e.preventDefault();
-        return;
+      switch (e.key) {
+        case "ArrowDown":
+          target = lenis.targetScroll + 120;
+          break;
+        case "ArrowUp":
+          target = lenis.targetScroll - 120;
+          break;
+        case "PageDown":
+          target = lenis.targetScroll + page;
+          break;
+        case "PageUp":
+          target = lenis.targetScroll - page;
+          break;
+        case " ":
+          target = lenis.targetScroll + (e.shiftKey ? -page : page);
+          break;
+        case "Home":
+          target = 0;
+          break;
+        case "End":
+          target = lenis.limit;
+          break;
+        default:
+          return;
       }
-
-      // Snap to the current section before animating to the next
-      window.scrollTo({
-        top: sectionRefs.current[currentSection.current].offsetTop,
-        behavior: "auto",
-      });
-
-      isAnimating.current = true;
-      document.body.style.overflow = "hidden"; // Prevent native scroll
-
-      // --- FIX: Snap to bottom of section when scrolling up ---
-      let scrollTarget;
-      if (direction === -1) {
-        // Scrolling up: snap to bottom of previous section
-        const prevSection = sectionRefs.current[nextSection];
-        scrollTarget =
-          prevSection.offsetTop + prevSection.offsetHeight - window.innerHeight;
-      } else {
-        // Scrolling down: snap to top of next section
-        scrollTarget = sectionRefs.current[nextSection].offsetTop;
-      }
-
-      // Set duration: 1.5 for view 1-7, 1 for view 7-11
-      const duration = nextSection < 7 ? 1.5 : 1;
-
-      gsap.to(window, {
-        scrollTo: { y: scrollTarget, autoKill: false },
-        duration,
-        ease: "power1.inOut",
-        onUpdate: () => {
-          ScrollTrigger.update();
-        },
-        onComplete: () => {
-          isAnimating.current = false;
-          currentSection.current = nextSection;
-          document.body.style.overflow = "";
-          ScrollTrigger.refresh();
-        },
-      });
 
       e.preventDefault();
-    };
-
-    // --- Touch support for mobile ---
-    let touchStartY = null;
-    let touchEndY = null;
-    let isTouching = false;
-
-    const onTouchStart = (e) => {
-      if (isAnimating.current) return; // Prevent new touches during animation
-      if (e.touches.length === 1) {
-        touchStartY = e.touches[0].clientY;
-        isTouching = true;
-      }
-    };
-
-    const onTouchMove = (e) => {
-      if (isTouching) {
-        e.preventDefault(); // Prevent native scroll during swipe
-      }
-    };
-
-    const onTouchEnd = (e) => {
-      if (isAnimating.current) return; // Prevent new touches during animation
-      if (touchStartY === null) {
-        isTouching = false;
-        return;
-      }
-      touchEndY = e.changedTouches[0].clientY;
-      const deltaY = touchStartY - touchEndY;
-      if (Math.abs(deltaY) < 40) {
-        isTouching = false;
-        return;
-      }
-      const fakeWheelEvent = { deltaY: deltaY, preventDefault: () => {} };
-      onWheel(fakeWheelEvent);
-      touchStartY = null;
-      touchEndY = null;
-      isTouching = false;
-    };
-
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("touchstart", onTouchStart, { passive: false });
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
-    window.addEventListener("touchend", onTouchEnd, { passive: false });
-
-    // Prevent keyboard scroll during animation
-    const onKeyDown = (e) => {
-      if (
-        isAnimating.current &&
-        (e.key === "ArrowDown" ||
-          e.key === "ArrowUp" ||
-          e.key === "PageDown" ||
-          e.key === "PageUp" ||
-          e.key === " ")
-      ) {
-        e.preventDefault();
-      }
+      lenis.scrollTo(target, { duration: 0.8 });
     };
     window.addEventListener("keydown", onKeyDown);
 
+    // Layout settles late here (3D canvas, webfonts, images) — re-measure triggers
+    const refresh = () => ScrollTrigger.refresh();
+    window.addEventListener("load", refresh);
+    const refreshTimer = setTimeout(refresh, 1500);
+
     return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("touchend", onTouchEnd);
+      clearTimeout(refreshTimer);
       window.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = "";
+      window.removeEventListener("load", refresh);
+      lenis.off("scroll", onLenisScroll);
+      gsap.ticker.remove(raf);
+      gsap.ticker.lagSmoothing(500, 33); // restore GSAP's default
+      lenis.destroy();
+      delete window.lenis;
+      delete window.scrollToSection;
+      delete window.setSmoothScrollSection;
     };
   }, []);
 
+  // Cross-fade the persistent background once view7 comes into play
   useEffect(() => {
-    const onScroll = () => {
-      // Find the current section index
+    let frame = null;
+    let shown = null;
+
+    const evaluate = () => {
+      frame = null;
       let current = 0;
       SECTION_CLASSES.forEach((cls, idx) => {
         const el = document.querySelector(cls);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= window.innerHeight / 2) {
-            current = idx;
-          }
+        if (el && el.getBoundingClientRect().top <= window.innerHeight / 2) {
+          current = idx;
         }
       });
 
-      // Show persistent background for view7-section and below
-      if (current >= 6) {
-        window.dispatchEvent(new Event("showPersistentBg"));
-      } else {
-        window.dispatchEvent(new Event("hidePersistentBg"));
-      }
+      const shouldShow = current >= PERSISTENT_BG_FROM;
+      if (shouldShow === shown) return; // only fire on an actual change
+      shown = shouldShow;
+      window.dispatchEvent(
+        new Event(shouldShow ? "showPersistentBg" : "hidePersistentBg")
+      );
     };
 
-    window.addEventListener("scroll", onScroll);
-    onScroll(); // Initial check
+    const onScroll = () => {
+      if (frame === null) frame = requestAnimationFrame(evaluate);
+    };
 
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    evaluate(); // Initial check
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
   }, []);
 
   return null;
