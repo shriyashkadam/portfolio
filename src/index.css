@@ -337,20 +337,13 @@ opacity: 0;
 }
 
 .loader-video {
-  /* Fill the screen and scale the logo up; contain keeps the whole frame
-     visible (never cropped), and the black letterbox is invisible on black. */
-  width: 100vw;
-  height: 100vh;
+  /* Show the whole video at its natural aspect (never upscaled to fill), kept
+     sharp; the .loader's black background fills the rest of the screen. */
+  max-width: 100vw;
+  max-height: 100vh;
+  width: auto;
+  height: auto;
   object-fit: contain;
-}
-
-/* The video is landscape, so on a portrait screen (phones) `contain` leaves
-   black bars top & bottom. Fill instead — the logo is centred, so cover only
-   crops the empty side margins, not the logo. */
-@media (orientation: portrait) {
-  .loader-video {
-    object-fit: cover;
-  }
 }
 
 .loader .logo {
